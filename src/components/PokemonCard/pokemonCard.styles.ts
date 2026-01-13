@@ -1,4 +1,10 @@
 import styled from "styled-components";
+import type { PokemonTypeEng } from "../../services/pokemonTypes";
+import { pokemonTypeColorMap } from "../../utils/pokemonTypeColorMap";
+
+interface CardTypeContainerProps {
+    type: PokemonTypeEng
+}
 
 export const CardBase = styled.button`
     display: flex;
@@ -32,7 +38,17 @@ export const IdBase = styled.p`
 `
 
 export const TypeBase = styled.div`
-    background: lightblue;
+`
+
+export const PrimaryType = styled.div<CardTypeContainerProps>`
+    background-color:  ${({ type }) => pokemonTypeColorMap[type]};
+    padding: 0.3rem 0.7rem;
+    border-radius: 8px;
+    color: white;
+`
+
+export const SecondType = styled.div<CardTypeContainerProps>`
+    background-color:  ${({ type }) => pokemonTypeColorMap[type]};
     padding: 0.3rem 0.7rem;
     border-radius: 8px;
     color: white;
