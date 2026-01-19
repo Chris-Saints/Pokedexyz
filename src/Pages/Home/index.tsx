@@ -1,48 +1,176 @@
 import { useEffect, useState } from "react";
 import { Pokemoncard } from "../../components/PokemonCard";
 import { fetchCardPokemon, type PokemonCardBase } from "../../services/pokemonListService";
+import { ButtonGeneration, CardContainer, NavGeneration } from "./home.styles";
+
 
 export function Home() {
 
-    const [pokemons, setPokemons] = useState<PokemonCardBase[]>([]);
-    const [loading, setLoading] = useState(false)
+    const [pokemons, setPokemons] = useState<PokemonCardBase[]>([])
+
+    const [generation, setGeneration] = useState<number>(0)
+
+    
+
+    const [loading, setLoading] = useState(false);
+
+    const [offset, setOffset] = useState(0);
+    const limit = 50
+    const [max, setMax] = useState(1025);
+
+
+
+    const generationArray: Record<number, [number, number]> = {
+        1: [0, 151],
+        2: [151, 251],
+        3: [251, 386],
+        4: [386, 493],
+        5: [493, 649],
+        6: [649, 721],
+        7: [721, 809],
+        8: [809, 905],
+        9: [905, 1025],
+    }
+
+    //UseEffect de renderização inicial da pagina. carrega 50 pokemons iniciais
 
     useEffect(() => {
         async function fetchPokemons(){
             try {
                 setLoading(true)
                 
-                const fetchDetailedPokemons: PokemonCardBase[] = await fetchCardPokemon() 
+                const fetchDetailedPokemons: PokemonCardBase[] = await fetchCardPokemon(limit, offset) 
 
                 setPokemons(fetchDetailedPokemons)
+
+                
+                setOffset(50)
+
                 
             } finally {
                 setLoading(false)
+
+                
             }
         }
         fetchPokemons()
         
-        
     }, [])
 
+
+    //Função do botão carregar mais. a pagina so carrega 50 pokemons por vez. e carrega mais 50 clicando nesse botão até chegar no limite de pokemons da geração ou total
+
+    async function handleLoadMorePokemons() {
+        if(offset >= max) return
+        setLoading(true)
+
+
+        const [start, end] = generation === 0 ? [0, 1025] : generationArray[generation]
+
+        if(start === 0 && end === 1025) {
+
+            const newPokemons = await fetchCardPokemon(limit, offset);
+            const newFilteredPokemon = newPokemons.filter(( pokemon ) => pokemon.id <= end)
+
+            setPokemons(prev => [...prev, ...newFilteredPokemon]);
+
+            setOffset(prev => prev + limit)
+        }
+
+        if(generation > 0) {
+
+
+            const newLimit = end - pokemons.length;
+
+            if(newLimit <= 50) {
+                const newPokemons = await fetchCardPokemon(newLimit, offset);
+
+                setPokemons(prev => [...prev, ...newPokemons]);
+            } else {
+                const newPokemons = await fetchCardPokemon(limit, offset)
+
+                setPokemons(prev => [...prev, ...newPokemons]);
+            }
+
+
+            setOffset(prev => prev + limit)
+        }
+    
+
+        setLoading(false)
+    }
+
+
+
+    //Função que faz a seleção de geração para o filtro. apaga toda a array e faz uma nova a partir de certos numeros
+
+    async function selectGeneration(gen: number){
+        setLoading(true)
+
+        setGeneration(gen)
+        setPokemons([]);
+
+        const [start, end] = gen === 0 ? [0, 1025] : generationArray[gen] 
+
+        setOffset(start);
+        setMax(end);
+
+
+        const newPokemons = await fetchCardPokemon(limit, start);
+
+        setPokemons(prev => [...prev, ...newPokemons]);
+
+            
+        setOffset(prev => prev + limit)
+
+        
         
 
+        setLoading(false)
 
 
+    }
+
+    console.log(max);
+    
 
     return(
         <>
 
-        {loading && loading ? <p>Carregando</p> : <p></p>}
+        <div>
+            <NavGeneration>
+                <ButtonGeneration onClick ={() => selectGeneration(0)}>=</ButtonGeneration>
+                <ButtonGeneration onClick ={() => selectGeneration(1)}>1</ButtonGeneration>
+                <ButtonGeneration onClick ={() => selectGeneration(2)}>2</ButtonGeneration>
+                <ButtonGeneration onClick ={() => selectGeneration(3)}>3</ButtonGeneration>
+                <ButtonGeneration onClick ={() => selectGeneration(4)}>4</ButtonGeneration>
+                <ButtonGeneration onClick ={() => selectGeneration(5)}>5</ButtonGeneration>
+                <ButtonGeneration onClick ={() => selectGeneration(6)}>6</ButtonGeneration>
+                <ButtonGeneration onClick ={() => selectGeneration(7)}>7</ButtonGeneration>
+                <ButtonGeneration onClick ={() => selectGeneration(8)}>8</ButtonGeneration>
+                <ButtonGeneration onClick ={() => selectGeneration(9)}>9</ButtonGeneration>
+            </NavGeneration>
+        </div>
 
-        {pokemons && pokemons.map((pokemon) => { //Ele verifica se existe algo dentro de pokemons e se tiver ele passa por todos os itens e renderiza todos
+        <CardContainer>
+            {pokemons && pokemons.map((pokemon) => { //Ele verifica se existe algo dentro de pokemons e se tiver ele passa por todos os itens e renderiza todos
             // Aqui ele não estava renderizando, mas funcionou quando coloquei o return
-            return <Pokemoncard 
-                        key={pokemon.id}
-                        pokemon={pokemon}
-                    />
-        })} 
+                return <Pokemoncard 
+                            key={pokemon.id}
+                            pokemon={pokemon}
+                        />
+            })} 
+        </CardContainer>
+        
+
+        {loading && loading ? <p>Carregando</p> : pokemons.length < max ? <button onClick={handleLoadMorePokemons}>Carregar Mais...</button> : <div></div>}
 
         </>
     )
 }
+
+
+
+//Colcoar no git que foi feito o carregamento de 50 a 50 pokemons de cada vez, mudando a funcção que faz a fetch e fazendo um botão que carregue os pokemons excluindo os que ja foram guardados na array. usando o limit e o offset. houve dificuldade na parte do offset. pq ele estava indo de 0 a 100. e isso foi resolvido. Feito tambem um pouco do css dos cards para que coubesse melhor "wrap", mas tem que mexer nisso depois.
+
+//Criação do Header com as opções de filtro para os pokemons de cada geração, inicialmente funcional, mas como o browser nao pode carregar 1000 requisições de uma vez, teve que ter mudanças nas requisições de pouco em pouco. Isso deve mudar a forma de requisição dos filtros que deve ser mexido depois

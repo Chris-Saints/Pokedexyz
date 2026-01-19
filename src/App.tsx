@@ -3,13 +3,20 @@ import { defaultTheme } from './styles/themes/default'
 import { GlobalStyle } from './styles/global'
 import { Home } from './Pages/Home'
 
+
 function App() {
+
+
+  
 
 
   return (
     <ThemeProvider theme={defaultTheme}>
+
       <Home />
+
       <GlobalStyle />
+
     </ThemeProvider>
   )
 }
