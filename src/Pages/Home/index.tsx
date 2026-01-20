@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { Pokemoncard } from "../../components/PokemonCard";
 import { fetchCardPokemon, type PokemonCardBase } from "../../services/pokemonListService";
-import { ButtonGeneration, CardContainer, NavGeneration } from "./home.styles";
+import { ButtonGeneration, CardContainer, MainHomeContainer, FilterButtonContainer, FilterContainer, InputContainer, ButtonMoreLoad, LoadImage } from "./home.styles";
+import { ListIcon, MagnifyingGlassIcon } from "@phosphor-icons/react";
+import  Pokebola  from "../../../public/Poké_Ball_icon.png"
 
 
 export function Home() {
@@ -10,15 +12,15 @@ export function Home() {
 
     const [generation, setGeneration] = useState<number>(0)
 
-    
-
     const [loading, setLoading] = useState(false);
 
     const [offset, setOffset] = useState(0);
-    const limit = 50
+
     const [max, setMax] = useState(1025);
 
+    const limit = 50
 
+    //Objeto que guarda as informações de geração e o numero do primeiro e do ultimo pokemon de cada geração
 
     const generationArray: Record<number, [number, number]> = {
         1: [0, 151],
@@ -132,40 +134,50 @@ export function Home() {
     }
 
     console.log(max);
-    
+     
 
     return(
-        <>
+        <MainHomeContainer>
 
-        <div>
-            <NavGeneration>
-                <ButtonGeneration onClick ={() => selectGeneration(0)}>=</ButtonGeneration>
-                <ButtonGeneration onClick ={() => selectGeneration(1)}>1</ButtonGeneration>
-                <ButtonGeneration onClick ={() => selectGeneration(2)}>2</ButtonGeneration>
-                <ButtonGeneration onClick ={() => selectGeneration(3)}>3</ButtonGeneration>
-                <ButtonGeneration onClick ={() => selectGeneration(4)}>4</ButtonGeneration>
-                <ButtonGeneration onClick ={() => selectGeneration(5)}>5</ButtonGeneration>
-                <ButtonGeneration onClick ={() => selectGeneration(6)}>6</ButtonGeneration>
-                <ButtonGeneration onClick ={() => selectGeneration(7)}>7</ButtonGeneration>
-                <ButtonGeneration onClick ={() => selectGeneration(8)}>8</ButtonGeneration>
-                <ButtonGeneration onClick ={() => selectGeneration(9)}>9</ButtonGeneration>
-            </NavGeneration>
-        </div>
+            <FilterContainer>
+                <InputContainer>
+                    <input placeholder="Digite o nome ou a ID do pokemon" type="text"/>
+                    <button><MagnifyingGlassIcon size={30} color="#f1f1f1"/></button>
+                </InputContainer>
 
-        <CardContainer>
-            {pokemons && pokemons.map((pokemon) => { //Ele verifica se existe algo dentro de pokemons e se tiver ele passa por todos os itens e renderiza todos
-            // Aqui ele não estava renderizando, mas funcionou quando coloquei o return
-                return <Pokemoncard 
-                            key={pokemon.id}
-                            pokemon={pokemon}
-                        />
-            })} 
-        </CardContainer>
-        
 
-        {loading && loading ? <p>Carregando</p> : pokemons.length < max ? <button onClick={handleLoadMorePokemons}>Carregar Mais...</button> : <div></div>}
+                <FilterButtonContainer>
+                    <ButtonGeneration filter={0} onClick ={() => selectGeneration(0)}><ListIcon weight={"bold"} size={20}/></ButtonGeneration>
+                    <ButtonGeneration filter={1} onClick ={() => selectGeneration(1)}>1</ButtonGeneration>
+                    <ButtonGeneration filter={2} onClick ={() => selectGeneration(2)}>2</ButtonGeneration>
+                    <ButtonGeneration filter={3} onClick ={() => selectGeneration(3)}>3</ButtonGeneration>
+                    <ButtonGeneration filter={4} onClick ={() => selectGeneration(4)}>4</ButtonGeneration>
+                    <ButtonGeneration filter={5} onClick ={() => selectGeneration(5)}>5</ButtonGeneration>
+                    <ButtonGeneration filter={6} onClick ={() => selectGeneration(6)}>6</ButtonGeneration>
+                    <ButtonGeneration filter={7} onClick ={() => selectGeneration(7)}>7</ButtonGeneration>
+                    <ButtonGeneration filter={8} onClick ={() => selectGeneration(8)}>8</ButtonGeneration>
+                    <ButtonGeneration filter={9} onClick ={() => selectGeneration(9)}>9</ButtonGeneration>
+                </FilterButtonContainer>
+            </FilterContainer>
 
-        </>
+            <CardContainer>
+                {pokemons && pokemons.map((pokemon) => { //Ele verifica se existe algo dentro de pokemons e se tiver ele passa por todos os itens e renderiza todos
+                // Aqui ele não estava renderizando, mas funcionou quando coloquei o return
+                    return <Pokemoncard 
+                                key={pokemon.id}
+                                pokemon={pokemon}
+                            />
+                })} 
+            </CardContainer>
+            
+
+            {loading && loading ?
+                <LoadImage src={Pokebola} alt="Pokebola" /> : 
+                pokemons.length < max ?
+                <ButtonMoreLoad onClick={handleLoadMorePokemons}>Carregar Mais...</ButtonMoreLoad> :
+                <div></div>}
+
+        </MainHomeContainer>
     )
 }
 

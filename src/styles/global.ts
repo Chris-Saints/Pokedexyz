@@ -8,15 +8,19 @@ export const GlobalStyle = createGlobalStyle`
     }
 
     body {
-        background: gray;
+        background: #F1F1F1;
         color: white;
         display: flex;
         flex-direction: column;
         align-items: center;
     }
 
+    input:focus{
+        border-color: ${props => props.theme['--red']};
+    }
+
     body, textarea, input, button {
-        font-family: "Jaldi", sans-serif;
+        font-family: "Roboto", sans-serif;
         font-weight: 400;
         font-size: 1rem;
     }
