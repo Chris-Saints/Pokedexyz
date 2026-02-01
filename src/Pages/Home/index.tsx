@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { Pokemoncard } from "../../components/PokemonCard";
-import { fetchCardPokemon, type PokemonCardBase } from "../../services/pokemonListService";
+import { fetchCardPokemon} from "../../services/pokemonListService";
 import { ButtonGeneration, CardContainer, MainHomeContainer, FilterButtonContainer, FilterContainer, InputContainer, ButtonMoreLoad, LoadImage } from "./home.styles";
 import { ListIcon, MagnifyingGlassIcon } from "@phosphor-icons/react";
-import  Pokebola  from "../../../public/Poké_Ball_icon.png"
-
+import  Pokebola  from "../../assets/Poké_Ball_icon.png"
+import { Link } from "react-router-dom";
+import type { PokemonCardBase } from "../../types/pokemonCardType";
 
 export function Home() {
 
@@ -34,6 +35,10 @@ export function Home() {
         9: [905, 1025],
     }
 
+    const [start, end] = generation === 0 ? [0, 1025] : generationArray[generation]
+
+    const diference = end - start
+
     //UseEffect de renderização inicial da pagina. carrega 50 pokemons iniciais
 
     useEffect(() => {
@@ -59,15 +64,12 @@ export function Home() {
         
     }, [])
 
-
     //Função do botão carregar mais. a pagina so carrega 50 pokemons por vez. e carrega mais 50 clicando nesse botão até chegar no limite de pokemons da geração ou total
 
     async function handleLoadMorePokemons() {
         if(offset >= max) return
         setLoading(true)
 
-
-        const [start, end] = generation === 0 ? [0, 1025] : generationArray[generation]
 
         if(start === 0 && end === 1025) {
 
@@ -82,7 +84,8 @@ export function Home() {
         if(generation > 0) {
 
 
-            const newLimit = end - pokemons.length;
+            const newLimit = diference - pokemons.length ;
+            
 
             if(newLimit <= 50) {
                 const newPokemons = await fetchCardPokemon(newLimit, offset);
@@ -96,13 +99,12 @@ export function Home() {
 
 
             setOffset(prev => prev + limit)
+
         }
     
 
         setLoading(false)
     }
-
-
 
     //Função que faz a seleção de geração para o filtro. apaga toda a array e faz uma nova a partir de certos numeros
 
@@ -132,8 +134,7 @@ export function Home() {
 
 
     }
-
-    console.log(max);
+    
      
 
     return(
@@ -163,17 +164,18 @@ export function Home() {
             <CardContainer>
                 {pokemons && pokemons.map((pokemon) => { //Ele verifica se existe algo dentro de pokemons e se tiver ele passa por todos os itens e renderiza todos
                 // Aqui ele não estava renderizando, mas funcionou quando coloquei o return
-                    return <Pokemoncard 
-                                key={pokemon.id}
-                                pokemon={pokemon}
-                            />
+                    return <Link key={pokemon.id} to={`/pokemon/${pokemon.id}`} >
+                                <Pokemoncard 
+                                    pokemon={pokemon}
+                                />  
+                            </Link>
                 })} 
             </CardContainer>
             
 
             {loading && loading ?
                 <LoadImage src={Pokebola} alt="Pokebola" /> : 
-                pokemons.length < max ?
+                pokemons.length < diference ?
                 <ButtonMoreLoad onClick={handleLoadMorePokemons}>Carregar Mais...</ButtonMoreLoad> :
                 <div></div>}
 
@@ -182,7 +184,8 @@ export function Home() {
 }
 
 
+//Fazer a pagina dos pokemons
 
-//Colcoar no git que foi feito o carregamento de 50 a 50 pokemons de cada vez, mudando a funcção que faz a fetch e fazendo um botão que carregue os pokemons excluindo os que ja foram guardados na array. usando o limit e o offset. houve dificuldade na parte do offset. pq ele estava indo de 0 a 100. e isso foi resolvido. Feito tambem um pouco do css dos cards para que coubesse melhor "wrap", mas tem que mexer nisso depois.
+//Fazer input de pesquisa para nome e id.
 
-//Criação do Header com as opções de filtro para os pokemons de cada geração, inicialmente funcional, mas como o browser nao pode carregar 1000 requisições de uma vez, teve que ter mudanças nas requisições de pouco em pouco. Isso deve mudar a forma de requisição dos filtros que deve ser mexido depois
+//Consertar o limite do array de pokemons das gerações 2 em diante e talvez da 0 tbm

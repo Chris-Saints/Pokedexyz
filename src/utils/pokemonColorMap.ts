@@ -1,4 +1,4 @@
-import type { PokemonTypeEng } from "../services/pokemonTypes";
+import type { PokemonTypeEng } from "../types/pokemonElementalTypes";
 
 //Type Color Map
 

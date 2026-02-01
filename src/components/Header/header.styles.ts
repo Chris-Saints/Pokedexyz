@@ -14,7 +14,7 @@ export const HeaderContainer = styled.div`
 
     background-color: ${props => props.theme['--red']};
     max-width: 100%;
-    width: 75%;
+    width: 100vh;
 
     && img{
         height: 10rem;

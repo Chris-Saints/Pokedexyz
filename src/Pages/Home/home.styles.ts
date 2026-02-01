@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { pokemonGenColorMap } from "../../utils/pokemonTypeColorMap";
+import { pokemonGenColorMap } from "../../utils/pokemonColorMap";
 
 interface FilterGenProps {
     filter: number;

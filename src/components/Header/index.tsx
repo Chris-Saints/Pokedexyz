@@ -1,4 +1,5 @@
-import PokemonLogo from '../../../public/International_Pokémon_logo.svg.png'
+import { Link } from 'react-router-dom'
+import PokemonLogo from '../../assets/International_Pokémon_logo.png'
 import { ButtonNavContainer, HeaderContainer, NavContainer } from './header.styles'
 
 export function Header() {
@@ -6,7 +7,8 @@ export function Header() {
         <HeaderContainer>
             <img src={PokemonLogo} alt='Pokemon Logo' />
             <NavContainer>
-                <ButtonNavContainer>Pokedex</ButtonNavContainer>
+                <Link to="/"><ButtonNavContainer>Home</ButtonNavContainer></Link>
+
                 <ButtonNavContainer>Berries</ButtonNavContainer>
                 <ButtonNavContainer>Items</ButtonNavContainer>
             </NavContainer>

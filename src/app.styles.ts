@@ -8,4 +8,5 @@ export const MainContainer = styled.main`
     gap: 1.5rem;
 
     max-width: 100%;
+    width: auto;
 `

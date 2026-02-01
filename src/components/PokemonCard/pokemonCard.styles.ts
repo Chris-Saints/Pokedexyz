@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import type { PokemonTypeEng } from "../../services/pokemonTypes";
-import { pokemonTypeColorMap } from "../../utils/pokemonTypeColorMap";
+import type { PokemonTypeEng } from "../../types/pokemonElementalTypes";
+import { pokemonTypeColorMap } from "../../utils/pokemonColorMap";
 
 interface CardTypeContainerProps {
     type: PokemonTypeEng
@@ -15,6 +15,7 @@ export const CardBase = styled.button`
     padding: 1rem;
     gap: 0.5rem;
     border: solid 1px #2c2f33;
+    text-decoration: none;
 
 
     width: 16rem;

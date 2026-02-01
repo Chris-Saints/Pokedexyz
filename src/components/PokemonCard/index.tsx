@@ -1,5 +1,5 @@
-import type { PokemonCardBase } from "../../services/pokemonListService"
-import { typeLocalMap } from "../../services/pokemonTypes"
+import type { PokemonCardBase } from "../../types/pokemonCardType"
+import { typeLocalMap } from "../../types/pokemonElementalTypes"
 import { CardBase, IdBase, ImageContainer, NameContainer, PrimaryType, SecondType, TypeBase } from "./pokemonCard.styles"
 
 type CardProps = {
