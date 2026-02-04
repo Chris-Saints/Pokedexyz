@@ -1,13 +1,20 @@
 import { useEffect, useState } from "react"
-import { Link, useParams } from "react-router-dom"
+import { useParams } from "react-router-dom"
 import { fetchGenericPokemon, fetchPokemon } from "../../services/pokemonApi";
-import { StarIcon } from "@phosphor-icons/react";
 import type { Pokemon } from "../../types/pokemonGlobalAPIType";
 import type { EvolutionTypePokemon } from "../../types/pokemonEvolutionType";
 import type { PokemonSpeciesType } from "../../types/pokemonSpeciesType";
-import { Evolution } from "../../components/Evolution";
 import  Pokebola  from "../../assets/Poké_Ball_icon.png"
-import { FavButtonDiv, InfoStats, MainIMGPokemon, MainInfo, MainPokedexContainer, NextPokemonButton, OthersPokemonSection, PrevPokemonButton, SectionStats, ShinySection } from "./pokedex.styles";
+import {  InfoTypesAndWeight, MainIMGPokemon, MainInfo, MainPokedexContainer, ShinySection, TypeDiv } from "./pokedex.styles";
+import { typeLocalMap } from "../../types/pokemonElementalTypes";
+import { PrimaryType } from "../../components/PokemonCard/pokemonCard.styles";
+import { Stats } from "../../components/Pokedex/Stats";
+import { Evolution } from "../../components/Pokedex/Evolution";
+import { SidePokemon } from "../../components/Pokedex/SidePokemon";
+import { LoadImage } from "../Home/home.styles";
+import { Abilities } from "../../components/Pokedex/Abilities";
+
+
 
 
 export function Pokedex() {
@@ -27,6 +34,8 @@ export function Pokedex() {
     useEffect(() => {
         async function loadPokemon() {
             setLoading(true);
+            setPrevPokemon(null)
+            setNextPokemon(null)
 
             if (!id) return;
 
@@ -34,8 +43,13 @@ export function Pokedex() {
 
             const species: PokemonSpeciesType = await fetchGenericPokemon(pokemon.species.url)
 
-            fetchPokemon(Number(id) + 1).then(setNextPokemon);
-            fetchPokemon(Number(id) - 1).then(setPrevPokemon);
+            if(Number(id) + 1 < 1026) {
+                fetchPokemon(Number(id) + 1).then(setNextPokemon);
+            }
+
+            if(Number(id) - 1 > 0) {
+                fetchPokemon(Number(id) - 1).then(setPrevPokemon);
+            }
 
 
             const evolution: EvolutionTypePokemon | null = await fetchGenericPokemon(species.evolution_chain.url);
@@ -62,17 +76,13 @@ export function Pokedex() {
         return <p>Carregando...</p>
     }
 
-    if(!nextPokemon) {
-        return <p>Carregando...</p>
-    }
-
-    if(!prevPokemon) {
-        return <p>Carregando...</p>
-    }
-
     if(!speciesPokemon) {
         return <p>Carregando...</p>
     }
+
+    const type = typeLocalMap[pokemon.types[0].type.name] ?? pokemon.types[0].type.name
+
+    const secondType = typeLocalMap[pokemon.types[1]?.type.name] ? typeLocalMap[pokemon.types[1].type.name] ?? pokemon.types[1]?.type.name : ''
 
 
     return (
@@ -84,93 +94,52 @@ export function Pokedex() {
             <MainInfo>
                 <div>
                     <p className="name">{pokemon.name.toUpperCase()}</p>
-                    <FavButtonDiv>
-                        <StarIcon size={35} />
-                    </FavButtonDiv>
                 </div>
                 
 
                 <p className="number">#{pokemon.id}</p>
-                <div>
-                    <p>Peso: {pokemon.weight}</p>
 
-                    <p>Altura: {pokemon.height}</p>
-                </div>
+                <InfoTypesAndWeight>
+                    
+                    <TypeDiv>
+                        {type && <PrimaryType type={pokemon.types[0]?.type.name}>{type}</PrimaryType>}
+                        {secondType && <PrimaryType type={pokemon.types[1]?.type.name}>{secondType}</PrimaryType>}
+                    </TypeDiv>
+  
+                </InfoTypesAndWeight>
             </MainInfo>
 
 
-            <SectionStats>
-                <span>Status</span>
-                <InfoStats>
-                    <div className="statsinfo">
-                        <p>{pokemon.stats[0].stat.name.toUpperCase()}:</p>
-                        <p>{pokemon.stats[0].base_stat}</p>
-                    </div>
-
-                    <div className="statsinfo">
-                        <p>{pokemon.stats[1].stat.name.toUpperCase()}:</p>
-                        <p>{pokemon.stats[1].base_stat}</p>
-                    </div>
-
-                    <div className="statsinfo">
-                        <p>{pokemon.stats[2].stat.name.toUpperCase()}:</p>
-                        <p>{pokemon.stats[2].base_stat}</p>
-                    </div>
-
-                    <div className="statsinfo">
-                        <p>{pokemon.stats[3].stat.name.toUpperCase()}:</p>
-                        <p>{pokemon.stats[3].base_stat}</p>
-                    </div>
-
-                    <div className="statsinfo">
-                        <p>{pokemon.stats[4].stat.name.toUpperCase()}:</p>
-                        <p>{pokemon.stats[4].base_stat}</p>
-                    </div>
-
-                    <div className="statsinfo">
-                        <p>{pokemon.stats[5].stat.name.toUpperCase()}:</p>
-                        <p>{pokemon.stats[5].base_stat}</p>
-                    </div>
-                </InfoStats>
-            </SectionStats>
+            <Stats pokemon={pokemon} />
             
 
 
             <p>descrição</p>
 
-            <p>variações de abilitys</p>
+            <Abilities pokemon={pokemon} />
 
-            <p>cries?</p>
 
             <ShinySection>
-                <p>Versão shiny</p>
-                <img src={pokemon.sprites.other["official-artwork"].front_shiny}/>
+                <p>Shiny</p>
+
+                <div>
+                    <img src={pokemon.sprites.other["official-artwork"].front_shiny}/>
+                </div>
+                
             </ShinySection>
 
 
-            <div>
-                <Evolution evolutionChain={evolutionPokemon} />
-            </div>
 
-            <p>formas alternativas se tiver</p>
+            <Evolution evolutionChain={evolutionPokemon} />
 
 
-            <OthersPokemonSection>
-                <Link to={`/pokemon/${prevPokemon.id}`} >
-                    <PrevPokemonButton>
-                        <img src={prevPokemon.sprites.other["official-artwork"].front_default}/>
-                    </PrevPokemonButton>
-                </Link>
+            {/* <p>formas alternativas se tiver</p> */}
 
-                <Link to={`/pokemon/${nextPokemon.id}`} >
-                    <NextPokemonButton>
-                        <img src={nextPokemon.sprites.other["official-artwork"].front_default}/>
-                    </NextPokemonButton> 
-                </Link>
-            </OthersPokemonSection>
+
+            <SidePokemon nextPokemon={nextPokemon} prevPokemon={prevPokemon} />
             
 
-            {loading && loading ? <img src={Pokebola} alt="Pokebola" /> : <div></div>}
+            {loading && loading ? <LoadImage src={Pokebola} alt="Pokebola" /> : <div></div>}
             
         </MainPokedexContainer>
     )

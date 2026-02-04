@@ -5,13 +5,19 @@ import { ButtonNavContainer, HeaderContainer, NavContainer } from './header.styl
 export function Header() {
     return (
         <HeaderContainer>
+            
             <img src={PokemonLogo} alt='Pokemon Logo' />
+
             <NavContainer>
+
                 <Link to="/"><ButtonNavContainer>Home</ButtonNavContainer></Link>
 
-                <ButtonNavContainer>Berries</ButtonNavContainer>
-                <ButtonNavContainer>Items</ButtonNavContainer>
+                <Link to="/berries"> <ButtonNavContainer>Berries</ButtonNavContainer> </Link>
+
+                <Link to="/items"><ButtonNavContainer>Items</ButtonNavContainer> </Link>
+
             </NavContainer>
+
         </HeaderContainer>
     )
 }

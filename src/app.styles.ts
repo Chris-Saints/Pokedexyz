@@ -7,6 +7,6 @@ export const MainContainer = styled.main`
     justify-content: center;
     gap: 1.5rem;
 
-    max-width: 100%;
-    width: auto;
+    max-width: 100vw;
+    width: 100%;
 `

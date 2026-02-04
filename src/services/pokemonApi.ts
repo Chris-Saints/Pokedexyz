@@ -3,20 +3,25 @@
 const BASE_URL = 'https://pokeapi.co/api/v2'
 
 export async function fetchPokemon(x: number | string) {
-    const res = await fetch(`${BASE_URL}/pokemon/${x}`)
-    return res.json()
+    const res = await fetch(`${BASE_URL}/pokemon/${x}`);
+    return res.json();
 }
 
 
 
 export async function fetchDetailOfPokemon(x: string) {
-    const res = await fetch(`${x}`)
-    return res.json()
+    const res = await fetch(`${x}`);
+    return res.json();
 }
 
 export async function fetchGenericPokemon(x: string) {
-    const res = await fetch(`${x}`)
-    return res.json()
+    const res = await fetch(`${x}`);
+    return res.json();
+}
+
+export async function fetchAbilities(x: number | string) {
+    const res = await fetch(`${BASE_URL}/ability/${x}`);
+    return res.json();
 }
 
 

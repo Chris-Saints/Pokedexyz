@@ -183,9 +183,4 @@ export function Home() {
     )
 }
 
-
-//Fazer a pagina dos pokemons
-
 //Fazer input de pesquisa para nome e id.
-
-//Consertar o limite do array de pokemons das gerações 2 em diante e talvez da 0 tbm
