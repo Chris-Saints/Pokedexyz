@@ -35,6 +35,7 @@ export const EvolutionCard = styled.button`
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 0.5rem;
 
     padding: 0.5rem;
     border-radius: 8px;

@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { pokemonGenColorMap } from "../../utils/pokemonColorMap";
 
 interface FilterGenProps {
@@ -146,18 +146,19 @@ export const ButtonMoreLoad = styled.button`
     }
 `
 
-//Animação de rotação da pokebola, mas nao funcionou. ver depois
+const rotate = keyframes`
+    from {
+        transform: rotate(0deg)
+    }
+    to {
+        transform: rotate(360deg)
+    }
+`
 
-// const rotate360 = keyframes
-//     from {
-//         transform: rotate(0deg);
-//     }
-//     to {
-//         transform: rotate(360deg);
-//     }
-// `
 
- export const LoadImage = styled.img`
+export const LoadImage = styled.img`
+    display: inline-block;
+    animation: ${rotate} 1s linear infinite;
     height: 100px;
 
 `

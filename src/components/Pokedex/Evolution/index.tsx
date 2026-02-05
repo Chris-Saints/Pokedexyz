@@ -4,6 +4,8 @@ import { Link } from "react-router-dom"
 import type { EvolutionTypePokemon } from "../../../types/pokemonEvolutionType";
 import { fetchPokemon } from "../../../services/pokemonApi";
 import type { Pokemon } from "../../../types/pokemonGlobalAPIType";
+import { PrimaryType, SecondType, TypeBase } from "../../PokemonCard/pokemonCard.styles";
+import { typeLocalMap } from "../../../types/pokemonElementalTypes";
 
 interface EvolutionProps {
     evolutionChain: EvolutionTypePokemon | null
@@ -56,7 +58,6 @@ export function Evolution({evolutionChain}: EvolutionProps) {
             }
             
             setArrayEvolution([base, first]);
-
             
             
         }
@@ -82,7 +83,28 @@ export function Evolution({evolutionChain}: EvolutionProps) {
                             <EvolutionCard>
 
                                 <EvolutionImg src={pokemon.sprites.other["official-artwork"].front_default} />
+                                
                                 {pokemon.name.toUpperCase()}
+
+                                <TypeBase>
+                                    
+                                    {pokemon.types[0]?.type.name && 
+                                        <PrimaryType 
+                                            type={pokemon.types[0]?.type.name}
+                                        >
+                                            {typeLocalMap[pokemon.types[0].type.name] ?? pokemon.types[0].type.name}
+                                        </PrimaryType>
+                                    }
+                                
+                                    {pokemon.types[1]?.type.name && 
+                                    <SecondType 
+                                        type={pokemon.types[1]?.type.name}
+                                    >
+                                        {typeLocalMap[pokemon.types[1]?.type.name] ? typeLocalMap[pokemon.types[1].type.name] ?? pokemon.types[1]?.type.name : ''}
+                                        </SecondType>
+                                    }
+                                
+                                </TypeBase>
 
                             </EvolutionCard> 
                         </Link>

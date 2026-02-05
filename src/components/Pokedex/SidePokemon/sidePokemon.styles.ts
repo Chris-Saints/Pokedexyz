@@ -2,11 +2,13 @@ import styled from "styled-components"
 
 export const OthersPokemonSection = styled.section`
 
-    max-width: 100vh;
     width: 100%;
 
     display: flex;
-    justify-content: space-between;
+    align-items: center;
+    justify-content: center;
+
+    gap: 20rem;
 
     margin-bottom: 2rem;
 
@@ -55,7 +57,7 @@ export const PrevPokemonButton = styled.button`
         font-family: ${props => props.theme['--orbitron']};
         font-size: 24px;
         font-weight: bold;
-        color: lightgray;
+        color: white;
     }
 `
 
@@ -100,6 +102,6 @@ export const NextPokemonButton = styled.button`
         font-family: ${props => props.theme['--orbitron']};
         font-size: 24px;
         font-weight: bold;
-        color: lightgray;
+        color: white;
     }
 `

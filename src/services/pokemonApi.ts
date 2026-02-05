@@ -24,6 +24,10 @@ export async function fetchAbilities(x: number | string) {
     return res.json();
 }
 
+export async function fetchSpecie(x: number | string) {
+    const res = await fetch(`${BASE_URL}/pokemon-species/${x}`);
+    return res.json();
+}
 
 
 

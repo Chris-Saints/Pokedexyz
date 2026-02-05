@@ -11,8 +11,9 @@ import { PrimaryType } from "../../components/PokemonCard/pokemonCard.styles";
 import { Stats } from "../../components/Pokedex/Stats";
 import { Evolution } from "../../components/Pokedex/Evolution";
 import { SidePokemon } from "../../components/Pokedex/SidePokemon";
-import { LoadImage } from "../Home/home.styles";
+import { LoadImage} from "../Home/home.styles";
 import { Abilities } from "../../components/Pokedex/Abilities";
+import { Description } from "../../components/Pokedex/Descrition";
 
 
 
@@ -114,7 +115,8 @@ export function Pokedex() {
             
 
 
-            <p>descrição</p>
+            <Description pokemon={pokemon} />
+
 
             <Abilities pokemon={pokemon} />
 

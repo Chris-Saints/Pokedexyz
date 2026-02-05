@@ -2,6 +2,8 @@ import { useEffect, useState } from "react"
 import type { Pokemon } from "../../../types/pokemonGlobalAPIType"
 import { fetchAbilities } from "../../../services/pokemonApi"
 import type { AbilityType } from "../../../types/pokemonAbilityType"
+import { AbilitySection, AbilityTable } from "./abilities.styles"
+import { nomeMaiusculo } from "../../../utils/pokemonUtils"
 
 interface AbilitiesProps {
     pokemon: Pokemon | null
@@ -37,17 +39,37 @@ export function Abilities({pokemon}: AbilitiesProps) {
 
 
     return(
-        <div>
+        <AbilitySection>
 
-            {abilities && abilities.map(ability => {
+            <h2>Ability</h2>
+
+            {abilities && abilities.map((ability) => {
+                const englishEffect = ability.effect_entries.find(
+                    entry => entry.language.name === "en"
+                );
+
+                
                 return (
-                    <div key={ability.id}>
-                        <div>{ability.name}</div>
-                        <div>{ability.effect_entries[0].effect}</div>
-                    </div>
+                    <AbilityTable key={ability.id}>
+                        <thead>
+                            <tr>
+                                <th>
+                                    {nomeMaiusculo(ability.name)}
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    {englishEffect?.effect}
+                                </td>
+                            </tr>
+                            
+                        </tbody>
+                    </AbilityTable>
                 )
             })}
 
-        </div>
+        </AbilitySection>
     )
 }

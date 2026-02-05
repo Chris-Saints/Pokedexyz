@@ -5,7 +5,6 @@ export const MainPokedexContainer = styled.main`
     flex-direction: column;
     align-items: center;
 
-;
 `
 
 export const MainIMGPokemon = styled.div`
@@ -27,6 +26,7 @@ export const MainIMGPokemon = styled.div`
     border: 5px solid black;
 
     && img{
+        padding: 1rem;
         height: 250px;
     }
 `
@@ -80,7 +80,6 @@ export const TypeDiv = styled.div`
 `
 
 
-
 //Shiny section
 
 export const ShinySection = styled.section`
@@ -116,6 +115,8 @@ export const ShinySection = styled.section`
     }
 
     && img {
+
+        padding: 1rem;
         height: 250px;
     }
 `
